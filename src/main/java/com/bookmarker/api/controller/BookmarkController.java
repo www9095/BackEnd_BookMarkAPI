@@ -19,7 +19,16 @@ public class BookmarkController {
 
     //api/bookmarks?page=2
     @GetMapping
-    public BookmarksDTO getBookmarks(@RequestParam(name = "page", defaultValue = "1") Integer page) {
-        return bookmarkService.getBookmarks(page);
+    public BookmarksDTO getBookmarks(
+            @RequestParam(name = "page", defaultValue = "1") Integer page,
+            @RequestParam(name = "query", defaultValue = "") String query) {
+        /**
+         * java 11에서 추가된 메소드
+         * isBlank => trim() + isEmpty()
+         */
+        if(query == null || query.isBlank()) {
+            return bookmarkService.getBookmarks(page);
+        }
+        return bookmarkService.searchBookmarks(query, page);
     }
 }
