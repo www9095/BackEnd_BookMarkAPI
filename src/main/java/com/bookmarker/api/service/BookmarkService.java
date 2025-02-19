@@ -28,12 +28,15 @@ public class BookmarkService {
         int pageNo = page < 1 ? 0 : page - 1;
         Pageable pageable = PageRequest.of(pageNo, 10, Sort.Direction.DESC, "id");
 //        Page<Bookmark> bookmarkPage = repository.findAll(pageable); //Page<T> //.getContent(); //page내부 데이터 추출
-        // Page<Bookmark> => Page<BookarkDto>
-        Page<BookmarkDTO> bookmarkPage = repository.findAll(pageable)
-                                    //map(Function) Function,의 추상메서드 R apploy(T t)
-//                                   .map(bookmark -> mapper.toDTO(bookmark)); //lamda
-                                    //lamda method reference
-                                     .map(mapper::toDTO);
+//        // Page<Bookmark> => Page<BookarkDto>
+//        Page<BookmarkDTO> bookmarkPage = repository.findAll(pageable)
+//                                    //map(Function) Function,의 추상메서드 R apploy(T t)
+////                                   .map(bookmark -> mapper.toDTO(bookmark)); //lamda
+//                                    //lamda method reference
+//                                     .map(mapper::toDTO);
+        //Query Method 호출
+        Page<BookmarkDTO> bookmarkPage = repository.findBookmarks(pageable);
+
         return new BookmarksDTO(bookmarkPage);
 
     }
