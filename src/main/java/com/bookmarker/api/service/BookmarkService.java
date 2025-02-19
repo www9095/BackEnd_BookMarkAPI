@@ -2,7 +2,11 @@ package com.bookmarker.api.service;
 
 import com.bookmarker.api.domain.Bookmark;
 import com.bookmarker.api.domain.BookmarkRepository;
+import com.bookmarker.api.dto.BookmarkDTO;
+import com.bookmarker.api.dto.BookmarkMapper;
+import com.bookmarker.api.dto.BookmarksDTO;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -13,17 +17,25 @@ import java.util.List;
 
 @Service
 @Transactional
-@RequiredArgsConstructor
+@RequiredArgsConstructor //생성자 추가하지 않아도 자동으로 생성되게 해줌
 public class BookmarkService {
     private final BookmarkRepository repository;
+    private final BookmarkMapper mapper;
 
     @Transactional(readOnly = true)
-    public List<Bookmark> getBookmarks(Integer page) {
+    public BookmarksDTO getBookmarks(Integer page) {
         //JPA의 페이지번호가 0부터 시작하기 때문에(클라이언트는 1부터)
         int pageNo = page < 1 ? 0 : page - 1;
         Pageable pageable = PageRequest.of(pageNo, 10, Sort.Direction.DESC, "id");
-        return repository.findAll(pageable) //Page<T>
-                         .getContent(); //page내부 데이터 추출
+//        Page<Bookmark> bookmarkPage = repository.findAll(pageable); //Page<T> //.getContent(); //page내부 데이터 추출
+        // Page<Bookmark> => Page<BookarkDto>
+        Page<BookmarkDTO> bookmarkPage = repository.findAll(pageable)
+                                    //map(Function) Function,의 추상메서드 R apploy(T t)
+//                                   .map(bookmark -> mapper.toDTO(bookmark)); //lamda
+                                    //lamda method reference
+                                     .map(mapper::toDTO);
+        return new BookmarksDTO(bookmarkPage);
+
     }
     
 }
