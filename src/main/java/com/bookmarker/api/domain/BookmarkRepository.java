@@ -9,12 +9,12 @@ import org.springframework.data.jpa.repository.Query;
 public interface BookmarkRepository extends JpaRepository<Bookmark, Long> {
 
     //Class-Based JPA Projection
-    @Query("""
-    select new com.bookmarker.api.dto.BookmarkDTO(b.id, b.title, b.url, b.createdAt) from Bookmark b
-    """)
 //    @Query("""
-//    select BookmarkDTO(b.id, b.title, b.url, b.createdAt) from Bookmark b
+//    select new com.bookmarker.api.dto.BookmarkDTO(b.id, b.title, b.url, b.createdAt) from Bookmark b
 //    """)
+    @Query("""
+    select new BookmarkDTO(b.id, b.title, b.url, b.createdAt) from Bookmark b
+    """)
     Page<BookmarkDTO> findBookmarks(Pageable pageable);
 
     @Query("""
