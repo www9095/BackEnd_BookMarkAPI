@@ -136,6 +136,8 @@
 				</configuration>
 			</plugin>
 		</plugins>
+		<!-- jarfile 이름 고정 -->
+		<finalName>springboot-nextjs-backend</finalName>
 	</build>
 
 </project>
